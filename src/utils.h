@@ -3,42 +3,67 @@
 #include <Arduino.h>
 
 /**
- * @brief Utility namespace containing helper functions and unions for data manipulation, conversion, and timing.
- *
- * This namespace provides a collection of utility functions for tasks such as bit manipulation,
- * BCD/decimal conversion, timing operations, string manipulation, and array joining/splitting.
- * It also includes unions for flexible data type conversions.
+ * @def I8_CHR_MAX
+ * @brief Maximum number of characters required to represent an int8_t as a string (e.g., "-128").
  */
-namespace ut {
+#define I8_CHR_MAX 5
 
 /**
- * @brief Maximum character lengths for string representations of various integer types.
+ * @def U8_CHR_MAX
+ * @brief Maximum number of characters required to represent a uint8_t as a string (e.g., "255").
  */
-#define I8_CHR_MAX 5    ///< Maximum characters for int8_t (e.g., "-128").
-#define U8_CHR_MAX 4    ///< Maximum characters for uint8_t (e.g., "255").
-#define I16_CHR_MAX 7   ///< Maximum characters for int16_t (e.g., "-32768").
-#define U16_CHR_MAX 6   ///< Maximum characters for uint16_t (e.g., "65535").
-#define I32_CHR_MAX 12  ///< Maximum characters for int32_t (e.g., "-2147483648").
-#define U32_CHR_MAX 11  ///< Maximum characters for uint32_t (e.g., "4294967295").
-#define I64_CHR_MAX 22  ///< Maximum characters for int64_t (e.g., "-9223372036854775808").
-#define U64_CHR_MAX 21  ///< Maximum characters for uint64_t (e.g., "18446744073709551615").
+#define U8_CHR_MAX 4
 
 /**
- * @brief Extracts a specified range of bits from a value.
- *
+ * @def I16_CHR_MAX
+ * @brief Maximum number of characters required to represent an int16_t as a string (e.g., "-32768").
+ */
+#define I16_CHR_MAX 7
+
+/**
+ * @def U16_CHR_MAX
+ * @brief Maximum number of characters required to represent a uint16_t as a string (e.g., "65535").
+ */
+#define U16_CHR_MAX 6
+
+/**
+ * @def I32_CHR_MAX
+ * @brief Maximum number of characters required to represent an int32_t as a string (e.g., "-2147483648").
+ */
+#define I32_CHR_MAX 12
+
+/**
+ * @def U32_CHR_MAX
+ * @brief Maximum number of characters required to represent a uint32_t as a string (e.g., "4294967295").
+ */
+#define U32_CHR_MAX 11
+
+/**
+ * @def I64_CHR_MAX
+ * @brief Maximum number of characters required to represent an int64_t as a string (e.g., "-9223372036854775808").
+ */
+#define I64_CHR_MAX 22
+
+/**
+ * @def U64_CHR_MAX
+ * @brief Maximum number of characters required to represent a uint64_t as a string (e.g., "18446744073709551615").
+ */
+#define U64_CHR_MAX 21
+
+/**
+ * @brief Extracts a specified bit field from a value of type T.
  * @tparam T The type of the input value (e.g., uint8_t, uint16_t, etc.).
- * @param v The input value from which bits are extracted.
- * @param start The starting bit position (0-based).
+ * @param v The input value from which to extract bits.
+ * @param start The starting position of the bit field (0-based index).
  * @param count The number of bits to extract.
- * @return The extracted bits as a value of type T.
+ * @return The extracted bit field as a value of type T.
  */
 template <typename T>
 static T getBits(T v, uint8_t start, uint8_t count);
 
 /**
- * @brief Union for 16-bit data type conversions.
- *
- * Allows flexible access to a 16-bit value as different data types.
+ * @union union16
+ * @brief A 16-bit union for accessing data in different formats within the same memory region.
  */
 union union16 {
   uint16_t u16;   ///< Unsigned 16-bit integer.
@@ -48,9 +73,8 @@ union union16 {
 };
 
 /**
- * @brief Union for 32-bit data type conversions.
- *
- * Allows flexible access to a 32-bit value as different data types, including floating-point.
+ * @union union32
+ * @brief A 32-bit union for accessing data in different formats within the same memory region.
  */
 union union32 {
   uint32_t u32;     ///< Unsigned 32-bit integer.
@@ -63,9 +87,8 @@ union union32 {
 };
 
 /**
- * @brief Union for 64-bit data type conversions.
- *
- * Allows flexible access to a 64-bit value as different data types, including double-precision floating-point.
+ * @union union64
+ * @brief A 64-bit union for accessing data in different formats within the same memory region.
  */
 union union64 {
   uint64_t u64;     ///< Unsigned 64-bit integer.
@@ -80,598 +103,574 @@ union union64 {
 };
 
 /**
- * @brief Converts a BCD (Binary-Coded Decimal) value to a decimal value.
- *
- * @param bcd The BCD value to convert.
- * @return The equivalent decimal value.
+ * @brief Checks if the specified time (in minutes) has elapsed since the last timestamp.
+ * @param t Pointer to the timestamp (in milliseconds).
+ * @param delay_min The delay time in minutes.
+ * @param reset If true, updates the timestamp to the current time.
+ * @return True if the specified time has elapsed, false otherwise.
  */
-extern uint8_t BCD2DEC(uint8_t bcd);
+extern bool on_min(uint32_t *t, uint32_t delay_min, bool reset = false);
 
 /**
- * @brief Converts a decimal value to a BCD (Binary-Coded Decimal) value.
- *
- * @param dec The decimal value to convert.
- * @return The equivalent BCD value.
+ * @brief Checks if the specified time (in seconds) has elapsed since the last timestamp.
+ * @param t Pointer to the timestamp (in milliseconds).
+ * @param delay_sec The delay time in seconds.
+ * @param reset If true, updates the timestamp to the current time.
+ * @return True if the specified time has elapsed, false otherwise.
  */
-extern uint8_t DEC2BCD(uint8_t dec);
+extern bool on_sec(uint32_t *t, uint32_t delay_sec, bool reset = false);
 
 /**
- * @brief Checks if a specified time (in minutes) has elapsed and optionally resets the timer.
- *
- * @param t Reference to the start time (in milliseconds).
- * @param delayTime The delay time in minutes.
- * @param reset If true, resets the start time when the delay has elapsed.
- * @return 1 if the delay has elapsed, 0 otherwise.
+ * @brief Checks if the specified time (in milliseconds) has elapsed since the last timestamp.
+ * @param t Pointer to the timestamp (in milliseconds).
+ * @param delay_ms The delay time in milliseconds.
+ * @param reset If true, updates the timestamp to the current time.
+ * @return True if the specified time has elapsed, false otherwise.
  */
-extern uint8_t onTimeMin(uint32_t &t, uint32_t delayTime, bool reset = true);
+extern bool on_ms(uint32_t *t, uint32_t delay_ms, bool reset = false);
 
 /**
- * @brief Checks if a specified time (in seconds) has elapsed and optionally resets the timer.
- *
- * @param t Reference to the start time (in milliseconds).
- * @param delayTime The delay time in seconds.
- * @param reset If true, resets the start time when the delay has elapsed.
- * @return 1 if the delay has elapsed, 0 otherwise.
+ * @brief Checks if the specified time (in microseconds) has elapsed since the last timestamp.
+ * @param t Pointer to the timestamp (in microseconds).
+ * @param delay_us The delay time in microseconds.
+ * @param reset If true, updates the timestamp to the current time.
+ * @return True if the specified time has elapsed, false otherwise.
  */
-extern uint8_t onTimeSec(uint32_t &t, uint32_t delayTime, bool reset = true);
+extern bool on_us(uint32_t *t, uint32_t delay_us, bool reset = false);
 
 /**
- * @brief Checks if a specified time (in milliseconds) has elapsed and optionally resets the timer.
- *
- * @param t Reference to the start time (in milliseconds).
- * @param delayTime The delay time in milliseconds.
- * @param reset If true, resets the start time when the delay has elapsed.
- * @return 1 if the delay has elapsed, 0 otherwise.
+ * @brief Delays execution for the specified number of microseconds from the start time.
+ * @param start The start time (in microseconds, typically obtained from micros()).
+ * @param wait_us The delay time in microseconds.
  */
-extern uint8_t onTimeMs(uint32_t &t, uint32_t delayTime, bool reset = true);
+extern void delay_us(uint32_t start, uint32_t wait_us);
 
 /**
- * @brief Checks if a specified time (in microseconds) has elapsed and optionally resets the timer.
- *
- * @param t Reference to the start time (in microseconds).
- * @param delayTime The delay time in microseconds.
- * @param reset If true, resets the start time when the delay has elapsed.
- * @return 1 if the delay has elapsed, 0 otherwise.
+ * @brief Delays execution for the specified number of milliseconds from the start time.
+ * @param start The start time (in milliseconds, typically obtained from millis()).
+ * @param wait_ms The delay time in milliseconds.
  */
-extern uint8_t onTimeUs(uint32_t &t, uint32_t delayTime, bool reset = true);
+extern void delay_ms(uint32_t start, uint32_t wait_ms);
 
 /**
- * @brief Delays execution for a specified time (in microseconds).
- *
- * @param start The start time (in microseconds).
- * @param wait The delay time in microseconds.
+ * @brief Converts a Binary-Coded Decimal (BCD) number to a decimal number.
+ * @param bcd The BCD input number.
+ * @return The decimal equivalent.
  */
-extern void delayUs(uint32_t start, uint32_t wait);
+extern uint8_t bcd2dec(uint8_t bcd);
 
 /**
- * @brief Delays execution for a specified time (in milliseconds).
- *
- * @param start The start time (in milliseconds).
- * @param wait The delay time in milliseconds.
+ * @brief Converts a decimal number to a Binary-Coded Decimal (BCD) number.
+ * @param dec The decimal input number.
+ * @return The BCD equivalent.
  */
-extern void delayMs(uint32_t start, uint32_t wait);
+extern uint8_t dec2bcd(uint8_t dec);
 
 /**
- * @brief Reverses the characters in a null-terminated string.
- *
- * @param str The input string to reverse.
- * @return Pointer to the reversed string.
+ * @brief Converts a boolean value to a string.
+ * @param num The boolean value (true/false).
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param t Optional string to represent true (default: "true").
+ * @param f Optional string to represent false (default: "false").
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *strreverse(char *str);
+extern char *bool_to_str(bool num, char *str, uint8_t str_len, const char *t = nullptr, const char *f = nullptr);
 
 /**
  * @brief Converts an 8-bit signed integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The int8_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *i8toa(int8_t num, char *str, uint8_t base = 10);
+extern char *i8_to_str(int8_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts an 8-bit unsigned integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The uint8_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *u8toa(uint8_t num, char *str, uint8_t base = 10);
+extern char *u8_to_str(uint8_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a 16-bit signed integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The int16_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *i16toa(int16_t num, char *str, uint8_t base = 10);
+extern char *i16_to_str(int16_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a 16-bit unsigned integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The uint16_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *u16toa(uint16_t num, char *str, uint8_t base = 10);
+extern char *u16_to_str(uint16_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a 32-bit signed integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The int32_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *i32toa(int32_t num, char *str, uint8_t base = 10);
+extern char *i32_to_str(int32_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a 32-bit unsigned integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The uint32_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *u32toa(uint32_t num, char *str, uint8_t base = 10);
+extern char *u32_to_str(uint32_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a 64-bit signed integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The int64_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *i64toa(int64_t num, char *str, uint8_t base = 10);
+extern char *i64_to_str(int64_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a 64-bit unsigned integer to a string.
- *
- * @param num The number to convert.
- * @param str The output buffer for the string.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return Pointer to the resulting string.
+ * @param num The uint64_t number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param base The numerical base (default: 10).
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *u64toa(uint64_t num, char *str, uint8_t base = 10);
+extern char *u64_to_str(uint64_t num, char *str, uint8_t str_len, uint8_t base = 10);
 
 /**
  * @brief Converts a float to a string with specified formatting.
- *
- * @param num The float to convert.
- * @param str The output buffer for the string.
- * @param minWidth Minimum field width for formatting.
- * @param len Maximum length of the output string.
- * @param dec Number of decimal places.
- * @return Pointer to the resulting string.
+ * @param num The float number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param min_width The minimum field width for formatting.
+ * @param dec The number of decimal places.
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *ftoa(float num, char *str, int8_t minWidth, uint8_t len, uint8_t dec);
+extern char *float_to_str(float num, char *str, uint8_t str_len, int8_t min_width, uint8_t dec);
 
 /**
  * @brief Converts a double to a string with specified formatting.
- *
- * @param num The double to convert.
- * @param str The output buffer for the string.
- * @param minWidth Minimum field width for formatting.
- * @param len Maximum length of the output string.
- * @param dec Number of decimal places.
- * @return Pointer to the resulting string.
+ * @param num The double number to convert.
+ * @param str The output string buffer.
+ * @param str_len The size of the buffer.
+ * @param min_width The minimum field width for formatting.
+ * @param dec The number of decimal places.
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *dtoa(double num, char *str, int8_t minWidth, size_t len, uint8_t dec);
+extern char *double_to_str(double num, char *str, uint8_t str_len, int8_t min_width, uint8_t dec);
+
+/**
+ * @brief Converts a string to a boolean value.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param t Optional string representing true (default: "true").
+ * @param f Optional string representing false (default: "false").
+ * @return The parsed boolean value, or false on error.
+ */
+extern bool str_to_bool(const char *str, const char **endptr = nullptr, const char *t = nullptr, const char *f = nullptr);
 
 /**
  * @brief Converts a string to an 8-bit signed integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 8-bit signed integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed int8_t value, or 0 on error.
  */
-extern int8_t atoi8(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern int8_t str_to_i8(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to an 8-bit unsigned integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 8-bit unsigned integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed uint8_t value, or 0 on error.
  */
-extern uint8_t atou8(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern uint8_t str_to_u8(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a 16-bit signed integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 16-bit signed integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed int16_t value, or 0 on error.
  */
-extern int16_t atoi16(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern int16_t str_to_i16(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a 16-bit unsigned integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 16-bit unsigned integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed uint16_t value, or 0 on error.
  */
-extern uint16_t atou16(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern uint16_t str_to_u16(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a 32-bit signed integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 32-bit signed integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed int32_t value, or 0 on error.
  */
-extern int32_t atoi32(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern int32_t str_to_i32(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a 32-bit unsigned integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 32-bit unsigned integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed uint32_t value, or 0 on error.
  */
-extern uint32_t atou32(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern uint32_t str_to_u32(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a 64-bit signed integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 64-bit signed integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed int64_t value, or 0 on error.
  */
-extern int64_t atoi64(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern int64_t str_to_i64(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a 64-bit unsigned integer.
- *
- * @param str The input string to convert.
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @param base The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
- * @return The converted 64-bit unsigned integer.
+ * @param str The input string to parse.
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @param base The numerical base (default: 10).
+ * @return The parsed uint64_t value, or 0 on error.
  */
-extern uint64_t atou64(const char *str, const char **endptr = nullptr, uint8_t base = 10);
+extern uint64_t str_to_u64(const char *str, const char **endptr = nullptr, uint8_t base = 10);
 
 /**
  * @brief Converts a string to a double-precision floating-point number.
- *
- * @param str The input string to convert.
- * @param d The decimal point character (default: '.').
- * @param endptr Optional pointer to store the address of the first invalid character.
- * @return The converted double-precision floating-point number.
+ * @param str The input string to parse.
+ * @param d The decimal separator character (e.g., '.' or ',').
+ * @param endptr Optional pointer to store the address of the first unparsed character.
+ * @return The parsed double value, or 0.0 on error.
  */
-extern double atod(const char *str, const char d = '.', const char **endptr = nullptr);
+extern double str_to_double(const char *str, char d = '.', const char **endptr = nullptr);
+
+/**
+ * @brief Reverses the characters in a string.
+ * @param str The input string to reverse.
+ * @return Pointer to the reversed string, or NULL on error.
+ */
+extern char *str_reverse(char *str);
 
 /**
  * @brief Counts occurrences of a character in a string.
- *
- * @param str The input string.
+ * @param str The input string to search.
  * @param c The character to count.
- * @return The number of occurrences of the character (including null terminator).
+ * @return The number of occurrences of the character.
  */
-extern size_t chrCount(const char *str, char c);
+extern size_t chr_count(const char *str, char c);
 
 /**
  * @brief Counts occurrences of a substring in a string.
- *
- * @param str The input string.
+ * @param str The input string to search.
  * @param find The substring to count.
  * @return The number of occurrences of the substring.
  */
-extern size_t strCount(const char *str, const char *find);
+extern size_t str_count(const char *str, const char *find);
 
 /**
  * @brief Splits a string into an array of substrings based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array of substring pointers.
+ * @param ar The output array to store substring pointers.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ */
+extern void str_cut(char *str, char **ar, size_t ar_size, char delim = ',');
+
+/**
+ * @brief Joins an array of characters into a string with a delimiter.
+ * @param ar The input array of characters.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
  * @param delim The delimiter character.
+ * @return Pointer to the output string, or NULL on error.
  */
-extern void strCut(char *str, char **ar, char delim);
+extern char *join_chr_arr(const char *ar, size_t ar_size, char *buf, size_t buf_size, char delim);
 
 /**
- * @brief Joins an array of strings into a single string with a delimiter.
- *
- * @param arr The input array of strings.
- * @param arrCount The number of strings in the array.
- * @param delimiter The delimiter to use between strings.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @brief Joins an array of boolean values into a string with a delimiter.
+ * @param ar The input array of boolean values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @param t Optional string to represent true (default: "true").
+ * @param f Optional string to represent false (default: "false").
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinChrArr(const char **arr, size_t arrCount, char delimiter, char *buf, size_t bufSize);
-
-/**
- * @brief Joins an array of booleans into a string with a delimiter.
- *
- * @param arr The input array of booleans.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
- */
-extern char *joinBool(const bool *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_bool(const bool *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', const char *t = nullptr, const char *f = nullptr);
 
 /**
  * @brief Joins an array of 8-bit signed integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of int8_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinInt8(const int8_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 8-bit unsigned integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of uint8_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinUint8(const uint8_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 16-bit signed integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of int16_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinInt16(const int16_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 16-bit unsigned integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of uint16_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinUint16(const uint16_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 32-bit signed integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of int32_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinInt32(const int32_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 32-bit unsigned integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of uint32_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinUint32(const uint32_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 64-bit signed integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of int64_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinInt64(const int64_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of 64-bit unsigned integers into a string with a delimiter.
- *
- * @param arr The input array of integers.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of uint64_t values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinUint64(const uint64_t *arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
  * @brief Joins an array of floats into a string with a delimiter.
- *
- * @param arr The input array of floats.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param dec Number of decimal places for each float.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of float values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param dec The number of decimal places.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinFloat(const float *arr, size_t len, char *buf, size_t bufSize, uint8_t dec, char delimiter);
+extern char *join_float(const float *ar, size_t ar_size, char *buf, size_t buf_size, uint8_t dec, char delim = ',');
 
 /**
  * @brief Joins an array of doubles into a string with a delimiter.
- *
- * @param arr The input array of doubles.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param dec Number of decimal places for each double.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @param ar The input array of double values.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param dec The number of decimal places.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinDouble(const double *arr, size_t len, char *buf, size_t bufSize, uint8_t dec, char delimiter);
+extern char *join_double(const double *ar, size_t ar_size, char *buf, size_t buf_size, uint8_t dec, char delim = ',');
 
 /**
- * @brief Joins an array of strings into a string with a delimiter.
- *
- * @param arr The input array of strings.
- * @param len The length of the array.
- * @param buf The output buffer for the joined string.
- * @param bufSize The size of the output buffer.
- * @param delimiter The delimiter to use between values.
- * @return Pointer to the joined string, or nullptr if the buffer is too small.
+ * @brief Joins an array of strings into a single string with a delimiter.
+ * @param ar The input array of strings.
+ * @param ar_size The size of the input array.
+ * @param buf The output string buffer.
+ * @param buf_size The size of the buffer.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output string, or NULL on error.
  */
-extern char *joinStr(const char **arr, size_t len, char *buf, size_t bufSize, char delimiter);
+extern char *join_str(const char **ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
 
 /**
- * @brief Splits a string into an array of booleans based on a delimiter.
- *
+ * @brief Splits a string into an array of boolean values based on a delimiter.
  * @param str The input string to split.
- * @param ar The output array for the booleans.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store boolean values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @param t Optional string to represent true (default: "true").
+ * @param f Optional string to represent false (default: "false").
+ * @return Pointer to the output array, or NULL on error.
  */
-extern bool *splitb(char *str, bool *ar, char const delim, size_t count);
+extern bool *split_bool(const char *str, bool *ar, size_t ar_size, char delim = ',', const char *t = nullptr, const char *f = nullptr);
 
 /**
  * @brief Splits a string into an array of characters based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the characters.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store characters.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern char *splitc(char *str, char *ar, const char delim, size_t count);
+extern char *split_chr(const char *str, char *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 8-bit signed integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store int8_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern int8_t *spliti8(char *str, int8_t *ar, const char delim, size_t count);
+extern int8_t *split_i8(const char *str, int8_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 8-bit unsigned integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store uint8_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern uint8_t *splitu8(char *str, uint8_t *ar, const char delim, size_t count);
+extern uint8_t *split_u8(const char *str, uint8_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 16-bit signed integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store int16_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern int16_t *spliti16(char *str, int16_t *ar, const char delim, size_t count);
+extern int16_t *split_i16(const char *str, int16_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 16-bit unsigned integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store uint16_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern uint16_t *splitu16(char *str, uint16_t *ar, const char delim, size_t count);
+extern uint16_t *split_u16(const char *str, uint16_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 32-bit signed integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store int32_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern int32_t *spliti32(char *str, int32_t *ar, const char delim, size_t count);
+extern int32_t *split_i32(const char *str, int32_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 32-bit unsigned integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store uint32_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern uint32_t *splitu32(char *str, uint32_t *ar, const char delim, size_t count);
+extern uint32_t *split_u32(const char *str, uint32_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 64-bit signed integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store int64_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern int64_t *spliti64(char *str, int64_t *ar, const char delim, size_t count);
+extern int64_t *split_i64(const char *str, int64_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 64-bit unsigned integers based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the integers.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store uint64_t values.
+ * @param ar_size The size of the output array.
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern uint64_t *splitu64(char *str, uint64_t *ar, const char delim, size_t count);
+extern uint64_t *split_u64(const char *str, uint64_t *ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of floats based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the floats.
- * @param d The decimal point character.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store float values.
+ * @param ar_size The size of the output array.
+ * @param d The decimal separator character (e.g., '.' or ',').
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern float *splitf(char *str, float *ar, const char d, const char delim, size_t count);
+extern float *split_float(const char *str, float *ar, size_t ar_size, char d, char delim = ',');
 
 /**
  * @brief Splits a string into an array of doubles based on a delimiter.
- *
  * @param str The input string to split.
- * @param ar The output array for the doubles.
- * @param d The decimal point character.
- * @param delim The delimiter character.
- * @param count The number of elements to parse.
- * @return Pointer to the output array.
+ * @param ar The output array to store double values.
+ * @param ar_size The size of the output array.
+ * @param d The decimal separator character (e.g., '.' or ',').
+ * @param delim The delimiter character (default: ',').
+ * @return Pointer to the output array, or NULL on error.
  */
-extern double *splitd(char *str, double *ar, const char d, const char delim, size_t count);
+extern double *split_double(const char *str, double *ar, size_t ar_size, char d, char delim = ',');
 
 #include "utils.tpp"
-
-}  // namespace ut

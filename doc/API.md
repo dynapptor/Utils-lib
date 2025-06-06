@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Namespace `ut`](#namespace-ut)
+- [Overview](#overview)
 - [Macros](#macros)
 - [Unions](#unions)
   - [union16](#union16)
@@ -16,9 +16,9 @@
   - [String Conversion](#string-conversion)
   - [Array Operations](#array-operations)
 
-## Namespace `ut`
+## Overview
 
-The `ut` namespace contains utility functions and unions for data manipulation, conversion, and timing in Arduino projects. It is designed for efficiency in resource-constrained environments.
+The Arduino Utility Library provides utility functions and unions for data manipulation, conversion, and timing in Arduino projects. It is designed for efficiency in resource-constrained environments.
 
 ## Macros
 
@@ -48,10 +48,9 @@ The `ut` namespace contains utility functions and unions for data manipulation, 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   union16 data;
   data.u16 = 0x1234;
   Serial.print("High byte: ");
@@ -79,10 +78,9 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   union32 data;
   data.f = 3.14;
   Serial.print("Float as uint32: ");
@@ -112,10 +110,9 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   union64 data;
   data.d = 3.14159;
   Serial.print("Double as uint64: ");
@@ -146,10 +143,9 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint16_t value = 0b1010101010101010;
   uint16_t bits = getBits(value, 4, 3);
   Serial.print("Extracted bits: ");
@@ -161,9 +157,9 @@ void loop() {}
 
 ### BCD Conversion
 
-#### `BCD2DEC`
+#### `bcd2dec`
 
-**Signature**: `uint8_t BCD2DEC(uint8_t bcd)`
+**Signature**: `uint8_t bcd2dec(uint8_t bcd)`
 
 **Description**: Converts a BCD (Binary-Coded Decimal) value to a decimal value.
 
@@ -175,12 +171,11 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint8_t bcd = 0x25; // BCD for 25
-  uint8_t dec = BCD2DEC(bcd);
+  uint8_t dec = bcd2dec(bcd);
   Serial.print("BCD to decimal: ");
   Serial.println(dec); // Prints 25
 }
@@ -188,9 +183,9 @@ void setup() {
 void loop() {}
 ```
 
-#### `DEC2BCD`
+#### `dec2bcd`
 
-**Signature**: `uint8_t DEC2BCD(uint8_t dec)`
+**Signature**: `uint8_t dec2bcd(uint8_t dec)`
 
 **Description**: Converts a decimal value to a BCD (Binary-Coded Decimal) value.
 
@@ -202,12 +197,11 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint8_t dec = 25;
-  uint8_t bcd = DEC2BCD(dec);
+  uint8_t bcd = dec2bcd(dec);
   Serial.print("Decimal to BCD: ");
   Serial.println(bcd, HEX); // Prints 25
 }
@@ -217,170 +211,164 @@ void loop() {}
 
 ### Timing Functions
 
-#### `onTimeMin`
+#### `on_min`
 
-**Signature**: `uint8_t onTimeMin(uint32_t &t, uint32_t delayTime, bool reset = true)`
+**Signature**: `bool on_min(uint32_t *t, uint32_t delay_min, bool reset = false)`
 
 **Description**: Checks if a specified time (in minutes) has elapsed and optionally resets the timer.
 
 **Parameters**:
-- `t`: Reference to the start time (in milliseconds).
-- `delayTime`: The delay time in minutes.
+- `t`: Pointer to the start time (in milliseconds).
+- `delay_min`: The delay time in minutes.
 - `reset`: If true, resets the start time when the delay has elapsed.
 
-**Returns**: 1 if the delay has elapsed, 0 otherwise.
+**Returns**: `true` if the delay has elapsed, `false` otherwise.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
   static uint32_t start = millis();
-  if (onTimeMin(start, 1)) {
+  if (on_min(&start, 1, true)) {
     Serial.println("1 minute elapsed!");
   }
 }
 ```
 
-#### `onTimeSec`
+#### `on_sec`
 
-**Signature**: `uint8_t onTimeSec(uint32_t &t, uint32_t delayTime, bool reset = true)`
+**Signature**: `bool on_sec(uint32_t *t, uint32_t delay_sec, bool reset = false)`
 
 **Description**: Checks if a specified time (in seconds) has elapsed and optionally resets the timer.
 
 **Parameters**:
-- `t`: Reference to the start time (in milliseconds).
-- `delayTime`: The delay time in seconds.
+- `t`: Pointer to the start time (in milliseconds).
+- `delay_sec`: The delay time in seconds.
 - `reset`: If true, resets the start time when the delay has elapsed.
 
-**Returns**: 1 if the delay has elapsed, 0 otherwise.
+**Returns**: `true` if the delay has elapsed, `false` otherwise.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
   static uint32_t start = millis();
-  if (onTimeSec(start, 5)) {
+  if (on_sec(&start, 5, true)) {
     Serial.println("5 seconds elapsed!");
   }
 }
 ```
 
-#### `onTimeMs`
+#### `on_ms`
 
-**Signature**: `uint8_t onTimeMs(uint32_t &t, uint32_t delayTime, bool reset = true)`
+**Signature**: `bool on_ms(uint32_t *t, uint32_t delay_ms, bool reset = false)`
 
 **Description**: Checks if a specified time (in milliseconds) has elapsed and optionally resets the timer.
 
 **Parameters**:
-- `t`: Reference to the start time (in milliseconds).
-- `delayTime`: The delay time in milliseconds.
+- `t`: Pointer to the start time (in milliseconds).
+- `delay_ms`: The delay time in milliseconds.
 - `reset`: If true, resets the start time when the delay has elapsed.
 
-**Returns**: 1 if the delay has elapsed, 0 otherwise.
+**Returns**: `true` if the delay has elapsed, `false` otherwise.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
   static uint32_t start = millis();
-  if (onTimeMs(start, 1000)) {
+  if (on_ms(&start, 1000, true)) {
     Serial.println("1000 ms elapsed!");
   }
 }
 ```
 
-#### `onTimeUs`
+#### `on_us`
 
-**Signature**: `uint8_t onTimeUs(uint32_t &t, uint32_t delayTime, bool reset = true)`
+**Signature**: `bool on_us(uint32_t *t, uint32_t delay_us, bool reset = false)`
 
 **Description**: Checks if a specified time (in microseconds) has elapsed and optionally resets the timer.
 
 **Parameters**:
-- `t`: Reference to the start time (in microseconds).
-- `delayTime`: The delay time in microseconds.
+- `t`: Pointer to the start time (in microseconds).
+- `delay_us`: The delay time in microseconds.
 - `reset`: If true, resets the start time when the delay has elapsed.
 
-**Returns**: 1 if the delay has elapsed, 0 otherwise.
+**Returns**: `true` if the delay has elapsed, `false` otherwise.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
   static uint32_t start = micros();
-  if (onTimeUs(start, 1000)) {
+  if (on_us(&start, 1000, true)) {
     Serial.println("1000 us elapsed!");
   }
 }
 ```
 
-#### `delayUs`
+#### `delay_us`
 
-**Signature**: `void delayUs(uint32_t start, uint32_t wait)`
+**Signature**: `void delay_us(uint32_t start, uint32_t wait_us)`
 
 **Description**: Delays execution for a specified time (in microseconds).
 
 **Parameters**:
 - `start`: The start time (in microseconds).
-- `wait`: The delay time in microseconds.
+- `wait_us`: The delay time in microseconds.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint32_t start = micros();
-  delayUs(start, 1000);
+  delay_us(start, 1000);
   Serial.println("Delayed 1000 us");
 }
 
 void loop() {}
 ```
 
-#### `delayMs`
+#### `delay_ms`
 
-**Signature**: `void delayMs(uint32_t start, uint32_t wait)`
+**Signature**: `void delay_ms(uint32_t start, uint32_t wait_ms)`
 
 **Description**: Delays execution for a specified time (in milliseconds).
 
 **Parameters**:
 - `start`: The start time (in milliseconds).
-- `wait`: The delay time in milliseconds.
+- `wait_ms`: The delay time in milliseconds.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint32_t start = millis();
-  delayMs(start, 1000);
+  delay_ms(start, 1000);
   Serial.println("Delayed 1000 ms");
 }
 
@@ -389,9 +377,9 @@ void loop() {}
 
 ### String Manipulation
 
-#### `strreverse`
+#### `str_reverse`
 
-**Signature**: `char *strreverse(char *str)`
+**Signature**: `char *str_reverse(char *str)`
 
 **Description**: Reverses the characters in a null-terminated string.
 
@@ -403,12 +391,11 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "hello";
-  strreverse(str);
+  str_reverse(str);
   Serial.print("Reversed string: ");
   Serial.println(str); // Prints "olleh"
 }
@@ -416,9 +403,9 @@ void setup() {
 void loop() {}
 ```
 
-#### `chrCount`
+#### `chr_count`
 
-**Signature**: `size_t chrCount(const char *str, char c)`
+**Signature**: `size_t chr_count(const char *str, char c)`
 
 **Description**: Counts occurrences of a character in a string.
 
@@ -426,27 +413,26 @@ void loop() {}
 - `str`: The input string.
 - `c`: The character to count.
 
-**Returns**: The number of occurrences of the character (including null terminator).
+**Returns**: The number of occurrences of the character.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "hello";
-  size_t count = chrCount(str, 'l');
+  size_t count = chr_count(str, 'l');
   Serial.print("Occurrences of 'l': ");
-  Serial.println(count); // Prints 3
+  Serial.println(count); // Prints 2
 }
 
 void loop() {}
 ```
 
-#### `strCount`
+#### `str_count`
 
-**Signature**: `size_t strCount(const char *str, const char *find)`
+**Signature**: `size_t str_count(const char *str, const char *find)`
 
 **Description**: Counts occurrences of a substring in a string.
 
@@ -459,12 +445,11 @@ void loop() {}
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "hello hello";
-  size_t count = strCount(str, "hello");
+  size_t count = str_count(str, "hello");
   Serial.print("Occurrences of 'hello': ");
   Serial.println(count); // Prints 2
 }
@@ -472,29 +457,29 @@ void setup() {
 void loop() {}
 ```
 
-#### `strCut`
+#### `str_cut`
 
-**Signature**: `void strCut(char *str, char **ar, char delim)`
+**Signature**: `void str_cut(char *str, char **ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of substrings based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array of substring pointers.
-- `delim`: The delimiter character.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "a,b,c";
   char *ar[3];
-  strCut(str, ar, ',');
+  str_cut(str, ar, 3, ',');
   Serial.println("Split strings:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(ar[i]); // Prints "a", "b", "c"
   }
 }
@@ -504,28 +489,58 @@ void loop() {}
 
 ### String Conversion
 
-#### `i8toa`
+#### `bool_to_str`
 
-**Signature**: `char *i8toa(int8_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *bool_to_str(bool num, char *str, uint8_t str_len, const char *t = nullptr, const char *f = nullptr)`
+
+**Description**: Converts a boolean value to a string.
+
+**Parameters**:
+- `num`: The boolean value to convert.
+- `str`: The output buffer for the string.
+- `str_len`: The size of the output buffer.
+- `t`: Optional string to represent true (default: "true").
+- `f`: Optional string to represent false (default: "false").
+
+**Returns**: Pointer to the resulting string, or `NULL` on error.
+
+**Arduino Example**:
+```cpp
+#include <utils.h>
+
+void setup() {
+  Serial.begin(115200);
+  char buffer[10];
+  bool_to_str(true, buffer, sizeof(buffer), "yes", "no");
+  Serial.print("Boolean to string: ");
+  Serial.println(buffer); // Prints "yes"
+}
+
+void loop() {}
+```
+
+#### `i8_to_str`
+
+**Signature**: `char *i8_to_str(int8_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts an 8-bit signed integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[10];
-  i8toa(-128, buffer, 10);
+  i8_to_str(-128, buffer, sizeof(buffer), 10);
   Serial.print("Int8 to string: ");
   Serial.println(buffer); // Prints "-128"
 }
@@ -533,28 +548,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `u8toa`
+#### `u8_to_str`
 
-**Signature**: `char *u8toa(uint8_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *u8_to_str(uint8_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts an 8-bit unsigned integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[10];
-  u8toa(255, buffer, 16);
+  u8_to_str(255, buffer, sizeof(buffer), 16);
   Serial.print("Uint8 to string: ");
   Serial.println(buffer); // Prints "ff"
 }
@@ -562,28 +577,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `i16toa`
+#### `i16_to_str`
 
-**Signature**: `char *i16toa(int16_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *i16_to_str(int16_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts a 16-bit signed integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[10];
-  i16toa(-32768, buffer, 10);
+  i16_to_str(-32768, buffer, sizeof(buffer), 10);
   Serial.print("Int16 to string: ");
   Serial.println(buffer); // Prints "-32768"
 }
@@ -591,28 +606,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `u16toa`
+#### `u16_to_str`
 
-**Signature**: `char *u16toa(uint16_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *u16_to_str(uint16_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts a 16-bit unsigned integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[10];
-  u16toa(65535, buffer, 16);
+  u16_to_str(65535, buffer, sizeof(buffer), 16);
   Serial.print("Uint16 to string: ");
   Serial.println(buffer); // Prints "ffff"
 }
@@ -620,28 +635,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `i32toa`
+#### `i32_to_str`
 
-**Signature**: `char *i32toa(int32_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *i32_to_str(int32_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts a 32-bit signed integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[12];
-  i32toa(-2147483648, buffer, 10);
+  i32_to_str(-2147483648, buffer, sizeof(buffer), 10);
   Serial.print("Int32 to string: ");
   Serial.println(buffer); // Prints "-2147483648"
 }
@@ -649,28 +664,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `u32toa`
+#### `u32_to_str`
 
-**Signature**: `char *u32toa(uint32_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *u32_to_str(uint32_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts a 32-bit unsigned integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[12];
-  u32toa(4294967295, buffer, 16);
+  u32_to_str(4294967295, buffer, sizeof(buffer), 16);
   Serial.print("Uint32 to string: ");
   Serial.println(buffer); // Prints "ffffffff"
 }
@@ -678,28 +693,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `i64toa`
+#### `i64_to_str`
 
-**Signature**: `char *i64toa(int64_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *i64_to_str(int64_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts a 64-bit signed integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[22];
-  i64toa(-9223372036854775807, buffer, 10);
+  i64_to_str(-9223372036854775807, buffer, sizeof(buffer), 10);
   Serial.print("Int64 to string: ");
   Serial.println(buffer); // Prints "-9223372036854775807"
 }
@@ -707,28 +722,28 @@ void setup() {
 void loop() {}
 ```
 
-#### `u64toa`
+#### `u64_to_str`
 
-**Signature**: `char *u64toa(uint64_t num, char *str, uint8_t base = 10)`
+**Signature**: `char *u64_to_str(uint64_t num, char *str, uint8_t str_len, uint8_t base = 10)`
 
 **Description**: Converts a 64-bit unsigned integer to a string.
 
 **Parameters**:
 - `num`: The number to convert.
 - `str`: The output buffer for the string.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `str_len`: The size of the output buffer.
+- `base`: The numerical base (default: 10).
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[22];
-  u64toa(18446744073709551615, buffer, 16);
+  u64_to_str(18446744073709551615, buffer, sizeof(buffer), 16);
   Serial.print("Uint64 to string: ");
   Serial.println(buffer); // Prints "ffffffffffffffff"
 }
@@ -736,30 +751,29 @@ void setup() {
 void loop() {}
 ```
 
-#### `ftoa`
+#### `float_to_str`
 
-**Signature**: `char *ftoa(float num, char *str, int8_t minWidth, uint8_t len, uint8_t dec)`
+**Signature**: `char *float_to_str(float num, char *str, uint8_t str_len, int8_t min_width, uint8_t dec)`
 
 **Description**: Converts a float to a string with specified formatting.
 
 **Parameters**:
 - `num`: The float to convert.
 - `str`: The output buffer for the string.
-- `minWidth`: Minimum field width for formatting.
-- `len`: Maximum length of the output string.
+- `str_len`: The size of the output buffer.
+- `min_width`: Minimum field width for formatting.
 - `dec`: Number of decimal places.
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[32];
-  ftoa(3.14159, buffer, 1, 32, 2);
+  float_to_str(3.14159, buffer, sizeof(buffer), 0, 2);
   Serial.print("Float to string: ");
   Serial.println(buffer); // Prints "3.14"
 }
@@ -767,30 +781,29 @@ void setup() {
 void loop() {}
 ```
 
-#### `dtoa`
+#### `double_to_str`
 
-**Signature**: `char *dtoa(double num, char *str, int8_t minWidth, size_t len, uint8_t dec)`
+**Signature**: `char *double_to_str(double num, char *str, uint8_t str_len, int8_t min_width, uint8_t dec)`
 
 **Description**: Converts a double to a string with specified formatting.
 
 **Parameters**:
 - `num`: The double to convert.
 - `str`: The output buffer for the string.
-- `minWidth`: Minimum field width for formatting.
-- `len`: Maximum length of the output string.
+- `str_len`: The size of the output buffer.
+- `min_width`: Minimum field width for formatting.
 - `dec`: Number of decimal places.
 
-**Returns**: Pointer to the resulting string.
+**Returns**: Pointer to the resulting string, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char buffer[32];
-  dtoa(3.14159, buffer, 1, 32, 3);
+  double_to_str(3.14159, buffer, sizeof(buffer), 0, 3);
   Serial.print("Double to string: ");
   Serial.println(buffer); // Prints "3.142"
 }
@@ -798,28 +811,56 @@ void setup() {
 void loop() {}
 ```
 
-#### `atoi8`
+#### `str_to_bool`
 
-**Signature**: `int8_t atoi8(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `bool str_to_bool(const char *str, const char **endptr = nullptr, const char *t = nullptr, const char *f = nullptr)`
+
+**Description**: Converts a string to a boolean value.
+
+**Parameters**:
+- `str`: The input string to convert.
+- `endptr`: Optional pointer to store the address of the first invalid character.
+- `t`: Optional string representing true (default: "true").
+- `f`: Optional string representing false (default: "false").
+
+**Returns**: The converted boolean value, or `false` on error.
+
+**Arduino Example**:
+```cpp
+#include <utils.h>
+
+void setup() {
+  Serial.begin(115200);
+  const char *str = "yes";
+  bool value = str_to_bool(str, nullptr, "yes", "no");
+  Serial.print("String to boolean: ");
+  Serial.println(value); // Prints 1
+}
+
+void loop() {}
+```
+
+#### `str_to_i8`
+
+**Signature**: `int8_t str_to_i8(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to an 8-bit signed integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 8-bit signed integer.
+**Returns**: The converted 8-bit signed integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "-128";
-  int8_t value = atoi8(str);
+  int8_t value = str_to_i8(str);
   Serial.print("String to int8: ");
   Serial.println(value); // Prints -128
 }
@@ -827,28 +868,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atou8`
+#### `str_to_u8`
 
-**Signature**: `uint8_t atou8(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `uint8_t str_to_u8(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to an 8-bit unsigned integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 8-bit unsigned integer.
+**Returns**: The converted 8-bit unsigned integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "255";
-  uint8_t value = atou8(str);
+  uint8_t value = str_to_u8(str);
   Serial.print("String to uint8: ");
   Serial.println(value); // Prints 255
 }
@@ -856,28 +896,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atoi16`
+#### `str_to_i16`
 
-**Signature**: `int16_t atoi16(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `int16_t str_to_i16(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to a 16-bit signed integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 16-bit signed integer.
+**Returns**: The converted 16-bit signed integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "-32768";
-  int16_t value = atoi16(str);
+  int16_t value = str_to_i16(str);
   Serial.print("String to int16: ");
   Serial.println(value); // Prints -32768
 }
@@ -885,28 +924,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atou16`
+#### `str_to_u16`
 
-**Signature**: `uint16_t atou16(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `uint16_t str_to_u16(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to a 16-bit unsigned integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 16-bit unsigned integer.
+**Returns**: The converted 16-bit unsigned integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "65535";
-  uint16_t value = atou16(str);
+  uint16_t value = str_to_u16(str);
   Serial.print("String to uint16: ");
   Serial.println(value); // Prints 65535
 }
@@ -914,28 +952,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atoi32`
+#### `str_to_i32`
 
-**Signature**: `int32_t atoi32(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `int32_t str_to_i32(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to a 32-bit signed integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 32-bit signed integer.
+**Returns**: The converted 32-bit signed integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "-2147483648";
-  int32_t value = atoi32(str);
+  int32_t value = str_to_i32(str);
   Serial.print("String to int32: ");
   Serial.println(value); // Prints -2147483648
 }
@@ -943,28 +980,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atou32`
+#### `str_to_u32`
 
-**Signature**: `uint32_t atou32(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `uint32_t str_to_u32(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to a 32-bit unsigned integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 32-bit unsigned integer.
+**Returns**: The converted 32-bit unsigned integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "4294967295";
-  uint32_t value = atou32(str);
+  uint32_t value = str_to_u32(str);
   Serial.print("String to uint32: ");
   Serial.println(value); // Prints 4294967295
 }
@@ -972,28 +1008,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atoi64`
+#### `str_to_i64`
 
-**Signature**: `int64_t atoi64(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `int64_t str_to_i64(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to a 64-bit signed integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 64-bit signed integer.
+**Returns**: The converted 64-bit signed integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "-9223372036854775807";
-  int64_t value = atoi64(str);
+  int64_t value = str_to_i64(str);
   Serial.print("String to int64: ");
   Serial.println(value); // Prints -9223372036854775807
 }
@@ -1001,28 +1036,27 @@ void setup() {
 void loop() {}
 ```
 
-#### `atou64`
+#### `str_to_u64`
 
-**Signature**: `uint64_t atou64(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
+**Signature**: `uint64_t str_to_u64(const char *str, const char **endptr = nullptr, uint8_t base = 10)`
 
 **Description**: Converts a string to a 64-bit unsigned integer.
 
 **Parameters**:
 - `str`: The input string to convert.
 - `endptr`: Optional pointer to store the address of the first invalid character.
-- `base`: The numerical base (e.g., 10 for decimal, 16 for hexadecimal).
+- `base`: The numerical base (default: 10).
 
-**Returns**: The converted 64-bit unsigned integer.
+**Returns**: The converted 64-bit unsigned integer, or 0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "18446744073709551615";
-  uint64_t value = atou64(str);
+  uint64_t value = str_to_u64(str);
   Serial.print("String to uint64: ");
   Serial.println(value); // Prints 18446744073709551615
 }
@@ -1030,9 +1064,9 @@ void setup() {
 void loop() {}
 ```
 
-#### `atod`
+#### `str_to_double`
 
-**Signature**: `double atod(const char *str, const char d = '.', const char **endptr = nullptr)`
+**Signature**: `double str_to_double(const char *str, char d = '.', const char **endptr = nullptr)`
 
 **Description**: Converts a string to a double-precision floating-point number.
 
@@ -1041,17 +1075,16 @@ void loop() {}
 - `d`: The decimal point character (default: '.').
 - `endptr`: Optional pointer to store the address of the first invalid character.
 
-**Returns**: The converted double-precision floating-point number.
+**Returns**: The converted double-precision floating-point number, or 0.0 on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *str = "3.14159";
-  double value = atod(str);
+  double value = str_to_double(str);
   Serial.print("String to double: ");
   Serial.println(value, 5); // Prints 3.14159
 }
@@ -1061,63 +1094,63 @@ void loop() {}
 
 ### Array Operations
 
-#### `joinChrArr`
+#### `join_chr_arr`
 
-**Signature**: `char *joinChrArr(const char **arr, size_t arrCount, char delimiter, char *buf, size_t bufSize)`
+**Signature**: `char *join_chr_arr(const char *ar, size_t ar_size, char *buf, size_t buf_size, char delim)`
 
-**Description**: Joins an array of strings into a single string with a delimiter.
+**Description**: Joins an array of characters into a single string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of strings.
-- `arrCount`: The number of strings in the array.
-- `delimiter`: The delimiter to use between strings.
+- `ar`: The input array of characters.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character.
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
-  const char *arr[] = {"apple", "banana", "cherry"};
-  char buffer[50];
-  joinChrArr(arr, 3, ',', buffer, 50);
-  Serial.print("Joined strings: ");
-  Serial.println(buffer); // Prints "apple,banana,cherry"
+  Serial.begin(115200);
+  const char arr[] = {'a', 'b', 'c'};
+  char buffer[10];
+  join_chr_arr(arr, 3, buffer, sizeof(buffer), ',');
+  Serial.print("Joined characters: ");
+  Serial.println(buffer); // Prints "a,b,c"
 }
 
 void loop() {}
 ```
 
-#### `joinBool`
+#### `join_bool`
 
-**Signature**: `char *joinBool(const bool *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_bool(const bool *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', const char *t = nullptr, const char *f = nullptr)`
 
 **Description**: Joins an array of booleans into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of booleans.
-- `len`: The length of the array.
+- `ar`: The input array of booleans.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
+- `t`: Optional string to represent true (default: "true").
+- `f`: Optional string to represent false (default: "false").
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   bool arr[] = {true, false, true};
-  char buffer[10];
-  joinBool(arr, 3, buffer, 10, ',');
+  char buffer[20];
+  join_bool(arr, 3, buffer, sizeof(buffer), ',', "1", "0");
   Serial.print("Joined booleans: ");
   Serial.println(buffer); // Prints "1,0,1"
 }
@@ -1125,31 +1158,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinInt8`
+#### `join_i8`
 
-**Signature**: `char *joinInt8(const int8_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 8-bit signed integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   int8_t arr[] = {-128, 0, 127};
   char buffer[20];
-  joinInt8(arr, 3, buffer, 20, ',');
+  join_i8(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined int8: ");
   Serial.println(buffer); // Prints "-128,0,127"
 }
@@ -1157,31 +1189,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinUint8`
+#### `join_u8`
 
-**Signature**: `char *joinUint8(const uint8_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 8-bit unsigned integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint8_t arr[] = {0, 128, 255};
   char buffer[20];
-  joinUint8(arr, 3, buffer, 20, ',');
+  join_u8(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined uint8: ");
   Serial.println(buffer); // Prints "0,128,255"
 }
@@ -1189,31 +1220,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinInt16`
+#### `join_i16`
 
-**Signature**: `char *joinInt16(const int16_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 16-bit signed integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   int16_t arr[] = {-32768, 0, 32767};
   char buffer[30];
-  joinInt16(arr, 3, buffer, 30, ',');
+  join_i16(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined int16: ");
   Serial.println(buffer); // Prints "-32768,0,32767"
 }
@@ -1221,31 +1251,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinUint16`
+#### `join_u16`
 
-**Signature**: `char *joinUint16(const uint16_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 16-bit unsigned integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint16_t arr[] = {0, 32768, 65535};
   char buffer[30];
-  joinUint16(arr, 3, buffer, 30, ',');
+  join_u16(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined uint16: ");
   Serial.println(buffer); // Prints "0,32768,65535"
 }
@@ -1253,31 +1282,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinInt32`
+#### `join_i32`
 
-**Signature**: `char *joinInt32(const int32_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 32-bit signed integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   int32_t arr[] = {-2147483648, 0, 2147483647};
   char buffer[50];
-  joinInt32(arr, 3, buffer, 50, ',');
+  join_i32(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined int32: ");
   Serial.println(buffer); // Prints "-2147483648,0,2147483647"
 }
@@ -1285,31 +1313,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinUint32`
+#### `join_u32`
 
-**Signature**: `char *joinUint32(const uint32_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 32-bit unsigned integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint32_t arr[] = {0, 2147483648, 4294967295};
   char buffer[50];
-  joinUint32(arr, 3, buffer, 50, ',');
+  join_u32(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined uint32: ");
   Serial.println(buffer); // Prints "0,2147483648,4294967295"
 }
@@ -1317,31 +1344,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinInt64`
+#### `join_i64`
 
-**Signature**: `char *joinInt64(const int64_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 64-bit signed integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   int64_t arr[] = {-9223372036854775807, 0, 9223372036854775807};
   char buffer[100];
-  joinInt64(arr, 3, buffer, 100, ',');
+  join_i64(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined int64: ");
   Serial.println(buffer); // Prints "-9223372036854775807,0,9223372036854775807"
 }
@@ -1349,31 +1375,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinUint64`
+#### `join_u64`
 
-**Signature**: `char *joinUint64(const uint64_t *arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of 64-bit unsigned integers into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of integers.
-- `len`: The length of the array.
+- `ar`: The input array of integers.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   uint64_t arr[] = {0, 9223372036854775808, 18446744073709551615};
   char buffer[100];
-  joinUint64(arr, 3, buffer, 100, ',');
+  join_u64(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined uint64: ");
   Serial.println(buffer); // Prints "0,9223372036854775808,18446744073709551615"
 }
@@ -1381,32 +1406,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinFloat`
+#### `join_float`
 
-**Signature**: `char *joinFloat(const float *arr, size_t len, char *buf, size_t bufSize, uint8_t dec, char delimiter)`
+**Signature**: `char *join_float(const float *ar, size_t ar_size, char *buf, size_t buf_size, uint8_t dec, char delim = ',')`
 
 **Description**: Joins an array of floats into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of floats.
-- `len`: The length of the array.
+- `ar`: The input array of floats.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
+- `buf_size`: The size of the output buffer.
 - `dec`: Number of decimal places for each float.
-- `delimiter`: The delimiter to use between values.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   float arr[] = {3.14159, 2.71828, 1.41421};
   char buffer[50];
-  joinFloat(arr, 3, buffer, 50, 2, ',');
+  join_float(arr, 3, buffer, sizeof(buffer), 2, ',');
   Serial.print("Joined floats: ");
   Serial.println(buffer); // Prints "3.14,2.72,1.41"
 }
@@ -1414,32 +1438,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinDouble`
+#### `join_double`
 
-**Signature**: `char *joinDouble(const double *arr, size_t len, char *buf, size_t bufSize, uint8_t dec, char delimiter)`
+**Signature**: `char *join_double(const double *ar, size_t ar_size, char *buf, size_t buf_size, uint8_t dec, char delim = ',')`
 
 **Description**: Joins an array of doubles into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of doubles.
-- `len`: The length of the array.
+- `ar`: The input array of doubles.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
+- `buf_size`: The size of the output buffer.
 - `dec`: Number of decimal places for each double.
-- `delimiter`: The delimiter to use between values.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   double arr[] = {3.14159, 2.71828, 1.41421};
   char buffer[50];
-  joinDouble(arr, 3, buffer, 50, 3, ',');
+  join_double(arr, 3, buffer, sizeof(buffer), 3, ',');
   Serial.print("Joined doubles: ");
   Serial.println(buffer); // Prints "3.142,2.718,1.414"
 }
@@ -1447,31 +1470,30 @@ void setup() {
 void loop() {}
 ```
 
-#### `joinStr`
+#### `join_str`
 
-**Signature**: `char *joinStr(const char **arr, size_t len, char *buf, size_t bufSize, char delimiter)`
+**Signature**: `char *join_str(const char **ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',')`
 
 **Description**: Joins an array of strings into a string with a delimiter.
 
 **Parameters**:
-- `arr`: The input array of strings.
-- `len`: The length of the array.
+- `ar`: The input array of strings.
+- `ar_size`: The size of the input array.
 - `buf`: The output buffer for the joined string.
-- `bufSize`: The size of the output buffer.
-- `delimiter`: The delimiter to use between values.
+- `buf_size`: The size of the output buffer.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the joined string, or nullptr if the buffer is too small.
+**Returns**: Pointer to the joined string, or `NULL` if the buffer is too small.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   const char *arr[] = {"red", "green", "blue"};
   char buffer[50];
-  joinStr(arr, 3, buffer, 50, ',');
+  join_str(arr, 3, buffer, sizeof(buffer), ',');
   Serial.print("Joined strings: ");
   Serial.println(buffer); // Prints "red,green,blue"
 }
@@ -1479,32 +1501,33 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitb`
+#### `split_bool`
 
-**Signature**: `bool *splitb(char *str, bool *ar, char const delim, size_t count)`
+**Signature**: `bool *split_bool(const char *str, bool *ar, size_t ar_size, char delim = ',', const char *t = nullptr, const char *f = nullptr)`
 
 **Description**: Splits a string into an array of booleans based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the booleans.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
+- `t`: Optional string to represent true (default: "true").
+- `f`: Optional string to represent false (default: "false").
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "1,0,1";
   bool arr[3];
-  splitb(str, arr, ',', 3);
+  split_bool(str, arr, 3, ',', "1", "0");
   Serial.println("Split booleans:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints 1, 0, 1
   }
 }
@@ -1512,32 +1535,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitc`
+#### `split_chr`
 
-**Signature**: `char *splitc(char *str, char *ar, const char delim, size_t count)`
+**Signature**: `char *split_chr(const char *str, char *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of characters based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the characters.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "a,b,c";
-  char arr[3];
-  splitc(str, arr, ',', 3);
+  char arr[4];
+  split_chr(str, arr, sizeof(arr), ',');
   Serial.println("Split characters:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints 'a', 'b', 'c'
   }
 }
@@ -1545,32 +1567,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `spliti8`
+#### `split_i8`
 
-**Signature**: `int8_t *spliti8(char *str, int8_t *ar, const char delim, size_t count)`
+**Signature**: `int8_t *split_i8(const char *str, int8_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 8-bit signed integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "-128,0,127";
   int8_t arr[3];
-  spliti8(str, arr, ',', 3);
+  split_i8(str, arr, 3, ',');
   Serial.println("Split int8:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints -128, 0, 127
   }
 }
@@ -1578,32 +1599,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitu8`
+#### `split_u8`
 
-**Signature**: `uint8_t *splitu8(char *str, uint8_t *ar, const char delim, size_t count)`
+**Signature**: `uint8_t *split_u8(const char *str, uint8_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 8-bit unsigned integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "0,128,255";
   uint8_t arr[3];
-  splitu8(str, arr, ',', 3);
+  split_u8(str, arr, 3, ',');
   Serial.println("Split uint8:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints 0, 128, 255
   }
 }
@@ -1611,32 +1631,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `spliti16`
+#### `split_i16`
 
-**Signature**: `int16_t *spliti16(char *str, int16_t *ar, const char delim, size_t count)`
+**Signature**: `int16_t *split_i16(const char *str, int16_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 16-bit signed integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "-32768,0,32767";
   int16_t arr[3];
-  spliti16(str, arr, ',', 3);
+  split_i16(str, arr, 3, ',');
   Serial.println("Split int16:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints -32768, 0, 32767
   }
 }
@@ -1644,32 +1663,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitu16`
+#### `split_u16`
 
-**Signature**: `uint16_t *splitu16(char *str, uint16_t *ar, const char delim, size_t count)`
+**Signature**: `uint16_t *split_u16(const char *str, uint16_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 16-bit unsigned integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "0,32768,65535";
   uint16_t arr[3];
-  splitu16(str, arr, ',', 3);
+  split_u16(str, arr, 3, ',');
   Serial.println("Split uint16:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints 0, 32768, 65535
   }
 }
@@ -1677,32 +1695,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `spliti32`
+#### `split_i32`
 
-**Signature**: `int32_t *spliti32(char *str, int32_t *ar, const char delim, size_t count)`
+**Signature**: `int32_t *split_i32(const char *str, int32_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 32-bit signed integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "-2147483648,0,2147483647";
   int32_t arr[3];
-  spliti32(str, arr, ',', 3);
+  split_i32(str, arr, 3, ',');
   Serial.println("Split int32:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints -2147483648, 0, 2147483647
   }
 }
@@ -1710,32 +1727,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitu32`
+#### `split_u32`
 
-**Signature**: `uint32_t *splitu32(char *str, uint32_t *ar, const char delim, size_t count)`
+**Signature**: `uint32_t *split_u32(const char *str, uint32_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 32-bit unsigned integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "0,2147483648,4294967295";
   uint32_t arr[3];
-  splitu32(str, arr, ',', 3);
+  split_u32(str, arr, 3, ',');
   Serial.println("Split uint32:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints 0, 2147483648, 4294967295
   }
 }
@@ -1743,32 +1759,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `spliti64`
+#### `split_i64`
 
-**Signature**: `int64_t *spliti64(char *str, int64_t *ar, const char delim, size_t count)`
+**Signature**: `int64_t *split_i64(const char *str, int64_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 64-bit signed integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "-9223372036854775807,0,9223372036854775807";
   int64_t arr[3];
-  spliti64(str, arr, ',', 3);
+  split_i64(str, arr, 3, ',');
   Serial.println("Split int64:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints -9223372036854775807, 0, 9223372036854775807
   }
 }
@@ -1776,32 +1791,31 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitu64`
+#### `split_u64`
 
-**Signature**: `uint64_t *splitu64(char *str, uint64_t *ar, const char delim, size_t count)`
+**Signature**: `uint64_t *split_u64(const char *str, uint64_t *ar, size_t ar_size, char delim = ',')`
 
 **Description**: Splits a string into an array of 64-bit unsigned integers based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the integers.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `ar_size`: The size of the output array.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "0,9223372036854775808,18446744073709551615";
   uint64_t arr[3];
-  splitu64(str, arr, ',', 3);
+  split_u64(str, arr, 3, ',');
   Serial.println("Split uint64:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i]); // Prints 0, 9223372036854775808, 18446744073709551615
   }
 }
@@ -1809,33 +1823,32 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitf`
+#### `split_float`
 
-**Signature**: `float *splitf(char *str, float *ar, const char d, const char delim, size_t count)`
+**Signature**: `float *split_float(const char *str, float *ar, size_t ar_size, char d, char delim = ',')`
 
 **Description**: Splits a string into an array of floats based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the floats.
+- `ar_size`: The size of the output array.
 - `d`: The decimal point character.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "3.14,2.72,1.41";
   float arr[3];
-  splitf(str, arr, '.', ',', 3);
+  split_float(str, arr, 3, '.', ',');
   Serial.println("Split floats:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i], 2); // Prints 3.14, 2.72, 1.41
   }
 }
@@ -1843,33 +1856,32 @@ void setup() {
 void loop() {}
 ```
 
-#### `splitd`
+#### `split_double`
 
-**Signature**: `double *splitd(char *str, double *ar, const char d, const char delim, size_t count)`
+**Signature**: `double *split_double(const char *str, double *ar, size_t ar_size, char d, char delim = ',')`
 
 **Description**: Splits a string into an array of doubles based on a delimiter.
 
 **Parameters**:
 - `str`: The input string to split.
 - `ar`: The output array for the doubles.
+- `ar_size`: The size of the output array.
 - `d`: The decimal point character.
-- `delim`: The delimiter character.
-- `count`: The number of elements to parse.
+- `delim`: The delimiter character (default: ',').
 
-**Returns**: Pointer to the output array.
+**Returns**: Pointer to the output array, or `NULL` on error.
 
 **Arduino Example**:
 ```cpp
 #include <utils.h>
-using namespace ut;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   char str[] = "3.14159,2.71828,1.41421";
   double arr[3];
-  splitd(str, arr, '.', ',', 3);
+  split_double(str, arr, 3, '.', ',');
   Serial.println("Split doubles:");
-  for (int i = 0; i < 3; i++) {
+  for (size_t i = 0; i < 3; i++) {
     Serial.println(arr[i], 5); // Prints 3.14159, 2.71828, 1.41421
   }
 }

@@ -1,78 +1,90 @@
-# Arduino Utility Library Keywords
+# utils.h Keywords for Arduino IDE Syntax Highlighting
+# Generated for utils.h to provide syntax highlighting for macros, types, and functions.
+# Format: keyword<TAB>type
+# Types: KEYWORD1 (macros, types), KEYWORD2 (functions), LITERAL1 (constants)
 
-# Namespace
-ut	KEYWORD1
+#######################################
+# Macros (KEYWORD1)
+#######################################
+I8_CHR_MAX	KEYWORD1
+I16_CHR_MAX	KEYWORD1
+I32_CHR_MAX	KEYWORD1
+I64_CHR_MAX	KEYWORD1
+U8_CHR_MAX	KEYWORD1
+U16_CHR_MAX	KEYWORD1
+U32_CHR_MAX	KEYWORD1
+U64_CHR_MAX	KEYWORD1
 
-# Macros
-I8_CHR_MAX	LITERAL1
-U8_CHR_MAX	LITERAL1
-I16_CHR_MAX	LITERAL1
-U16_CHR_MAX	LITERAL1
-I32_CHR_MAX	LITERAL1
-U32_CHR_MAX	LITERAL1
-I64_CHR_MAX	LITERAL1
-U64_CHR_MAX	LITERAL1
-
-# Unions
+#######################################
+# Unions (KEYWORD1)
+#######################################
 union16	KEYWORD1
 union32	KEYWORD1
 union64	KEYWORD1
 
-# Functions
+#######################################
+# Template Functions (KEYWORD2)
+#######################################
 getBits	KEYWORD2
-BCD2DEC	KEYWORD2
-DEC2BCD	KEYWORD2
-onTimeMin	KEYWORD2
-onTimeSec	KEYWORD2
-onTimeMs	KEYWORD2
-onTimeUs	KEYWORD2
-delayUs	KEYWORD2
-delayMs	KEYWORD2
-strreverse	KEYWORD2
-i8toa	KEYWORD2
-u8toa	KEYWORD2
-i16toa	KEYWORD2
-u16toa	KEYWORD2
-i32toa	KEYWORD2
-u32toa	KEYWORD2
-i64toa	KEYWORD2
-u64toa	KEYWORD2
-ftoa	KEYWORD2
-dtoa	KEYWORD2
-atoi8	KEYWORD2
-atou8	KEYWORD2
-atoi16	KEYWORD2
-atou16	KEYWORD2
-atoi32	KEYWORD2
-atou32	KEYWORD2
-atoi64	KEYWORD2
-atou64	KEYWORD2
-atod	KEYWORD2
-chrCount	KEYWORD2
-strCount	KEYWORD2
-strCut	KEYWORD2
-joinChrArr	KEYWORD2
-joinBool	KEYWORD2
-joinInt8	KEYWORD2
-joinUint8	KEYWORD2
-joinInt16	KEYWORD2
-joinUint16	KEYWORD2
-joinInt32	KEYWORD2
-joinUint32	KEYWORD2
-joinInt64	KEYWORD2
-joinUint64	KEYWORD2
-joinFloat	KEYWORD2
-joinDouble	KEYWORD2
-joinStr	KEYWORD2
-splitb	KEYWORD2
-splitc	KEYWORD2
-spliti8	KEYWORD2
-splitu8	KEYWORD2
-spliti16	KEYWORD2
-splitu16	KEYWORD2
-spliti32	KEYWORD2
-splitu32	KEYWORD2
-spliti64	KEYWORD2
-splitu64	KEYWORD2
-splitf	KEYWORD2
-splitd	KEYWORD2
+
+#######################################
+# Functions (KEYWORD2)
+#######################################
+bcd2dec	KEYWORD2
+bool_to_str	KEYWORD2
+chr_count	KEYWORD2
+dec2bcd	KEYWORD2
+delay_ms	KEYWORD2
+delay_us	KEYWORD2
+double_to_str	KEYWORD2
+float_to_str	KEYWORD2
+i8_to_str	KEYWORD2
+i16_to_str	KEYWORD2
+i32_to_str	KEYWORD2
+i64_to_str	KEYWORD2
+join_bool	KEYWORD2
+join_chr_arr	KEYWORD2
+join_double	KEYWORD2
+join_float	KEYWORD2
+join_i8	KEYWORD2
+join_i16	KEYWORD2
+join_i32	KEYWORD2
+join_i64	KEYWORD2
+join_str	KEYWORD2
+join_u8	KEYWORD2
+join_u16	KEYWORD2
+join_u32	KEYWORD2
+join_u64	KEYWORD2
+on_min	KEYWORD2
+on_ms	KEYWORD2
+on_sec	KEYWORD2
+on_us	KEYWORD2
+split_bool	KEYWORD2
+split_chr	KEYWORD2
+split_double	KEYWORD2
+split_float	KEYWORD2
+split_i8	KEYWORD2
+split_i16	KEYWORD2
+split_i32	KEYWORD2
+split_i64	KEYWORD2
+split_u8	KEYWORD2
+split_u16	KEYWORD2
+split_u32	KEYWORD2
+split_u64	KEYWORD2
+str_count	KEYWORD2
+str_cut	KEYWORD2
+str_reverse	KEYWORD2
+str_to_bool	KEYWORD2
+str_to_double	KEYWORD2
+str_to_i8	KEYWORD2
+str_to_i16	KEYWORD2
+str_to_i32	KEYWORD2
+str_to_i64	KEYWORD2
+str_to_u8	KEYWORD2
+str_to_u16	KEYWORD2
+str_to_u32	KEYWORD2
+str_to_u64	KEYWORD2
+u8_to_str	KEYWORD2
+u16_to_str	KEYWORD2
+u32_to_str	KEYWORD2
+u64_to_str	KEYWORD2
