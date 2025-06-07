@@ -3,14 +3,18 @@
 
 void setup() {
   Serial.begin(115200);
+  delay(10);
+  char xx[] = "\"one\",\"two\",\"tree\"";
 
-  const char c[] = "178.55,33.678,55.66666,40,44,199";
-  float buf[6]{};
-  split_float(c, buf, 6, '.', ',');
+  const char *ar[3]{};
 
-  for (size_t i = 0; i < 6; i++) {
-    Serial.println(buf[i]);
+  split_str(xx, xx, 18, ar, 3, ',');
+  for (size_t i = 0; i < 3; i++)
+  {
+    Serial.println(ar[i]);
   }
+  
+
 }
 
 void loop() {

@@ -1258,6 +1258,70 @@ bool *split_bool(const char *str, bool *ar, size_t ar_size, char delim, const ch
   return ar;
 }
 
+char *split_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim) {
+  // Validate inputs
+  if (!str || !ar || !dest || ar_size == 0 || dest_size == 0) {
+    return NULL;  // Invalid inputs
+  }
+
+  // Initialize ar to NULL
+  for (size_t i = 0; i < ar_size; i++) {
+    ar[i] = NULL;
+  }
+
+  // Check if dest buffer is large enough
+  // size_t str_len = strlen(str) + 1;  // Include null terminator
+  size_t token = 0;
+  size_t current = 0;
+  bool in_marked = false;  // Track if inside marked string
+  const char *p = str;
+  char *d = dest;
+  while (*p) {
+    if (current + 1 > dest_size) {
+      *d++ = '\0';
+      if (in_marked) ar[token] = NULL;
+      return dest;
+    }
+    if (!in_marked && (*p == ' ' || *p == '\n' || *p == '\r' || *p == '\t' || *p == '[' || *p == ']')) {
+      // continue;
+    } else {
+      if (*p == '\"') {
+        if (!in_marked) {
+          in_marked = true;
+          ar[token] = d;
+        } else {
+          in_marked = false;
+          *d++ = '\0';
+          current++;
+        }
+      } else if (*p == '\\') {
+        if (in_marked) {
+          if (p[1] == '\"') {
+            *d++ = '\"';
+            current++;
+            p++;
+          } else {
+            *d++ = '\\';
+            current++;
+          }
+        }
+      } else if (*p == delim && !in_marked) {
+        if (token < ar_size) {
+          token++;
+        } else {
+          return dest;
+        }
+      } else if (in_marked) {
+        *d++ = *p;
+        current++;
+      }
+    }
+    p++;
+  }
+  if (in_marked && current <= dest_size) *d = '\0';
+  return dest;
+}
+
 char *split_chr(const char *str, char *ar, size_t ar_size, char delim) {
   // Validate inputs
   if (!str || !ar || ar_size <= 1) {

@@ -572,6 +572,30 @@ extern bool *split_bool(const char *str, bool *ar, size_t ar_size, char delim = 
 extern char *split_chr(const char *str, char *ar, size_t ar_size, char delim = ',');
 
 /**
+ * @brief Splits a string into tokens based on a delimiter, extracting only quoted substrings.
+ *
+ * This function processes an input string, extracts substrings enclosed in double quotes (`"`), and stores them in a destination buffer.
+ * The extracted tokens are referenced by an array of pointers (`ar`). Non-quoted parts of the string are ignored, and the function supports
+ * escaped quotes (`\"`) and backslashes (`\\`) within quoted strings. The destination buffer can be the same as the input string for in-place processing.
+ *
+ * @param str The input string to process (null-terminated).
+ * @param dest The destination buffer where extracted tokens are stored.
+ * @param dest_size The size of the destination buffer (including space for null terminators).
+ * @param ar Array of pointers to store the starting addresses of extracted tokens.
+ * @param ar_size The size of the `ar` array (maximum number of tokens to extract).
+ * @param delim The delimiter character to separate tokens (default: ',').
+ *
+ * @return Pointer to the destination buffer (`dest`) on success, or `NULL` if any input parameter is invalid
+ *         (`str`, `dest`, or `ar` is `NULL`, or `dest_size` or `ar_size` is 0).
+ *
+ * @note The function modifies the `dest` buffer and may overwrite the input string if `str` and `dest` are the same.
+ * @note The caller must ensure `dest_size` is sufficient to hold all extracted tokens plus null terminators.
+ * @note Tokens exceeding `ar_size` are ignored, and the function stops processing if the `dest` buffer is full.
+ * @warning Ensure `dest_size` is large enough to avoid buffer overflow, especially in memory-constrained environments like Arduino.
+ */
+extern char *split_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim = ',');
+
+/**
  * @brief Splits a string into an array of 8-bit signed integers based on a delimiter.
  * @param str The input string to split.
  * @param ar The output array to store int8_t values.
