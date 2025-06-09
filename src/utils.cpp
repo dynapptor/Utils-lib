@@ -1222,7 +1222,7 @@ bool *split_bool(const char *str, bool *ar, size_t ar_size, char delim, const ch
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1327,7 +1327,7 @@ char *split_chr(const char *str, char *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size <= 1) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   // Copy non-delimiter characters
   size_t pos = 0;
   for (size_t i = 0; str[i] != '\0' && pos < ar_size - 1; i++) {
@@ -1352,7 +1352,7 @@ int8_t *split_i8(const char *str, int8_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1393,7 +1393,7 @@ uint8_t *split_u8(const char *str, uint8_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1434,7 +1434,7 @@ int16_t *split_i16(const char *str, int16_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1475,7 +1475,7 @@ uint16_t *split_u16(const char *str, uint16_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1516,7 +1516,7 @@ int32_t *split_i32(const char *str, int32_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1557,7 +1557,7 @@ uint32_t *split_u32(const char *str, uint32_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1598,7 +1598,7 @@ int64_t *split_i64(const char *str, int64_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1639,7 +1639,7 @@ uint64_t *split_u64(const char *str, uint64_t *ar, size_t ar_size, char delim) {
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1680,7 +1680,7 @@ float *split_float(const char *str, float *ar, size_t ar_size, char d, char deli
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1721,7 +1721,7 @@ double *split_double(const char *str, double *ar, size_t ar_size, char d, char d
   if (!str || !ar || ar_size == 0) {
     return NULL;  // Invalid string, array, or size
   }
-
+  if (*str == '[') str++;
   const char *token = str;
   size_t i = 0;
 
@@ -1755,4 +1755,82 @@ double *split_double(const char *str, double *ar, size_t ar_size, char d, char d
   }
 
   return ar;
+}
+
+bool is_number(const char *str, size_t len) {
+  if (!str || len == 0) return false;
+
+  size_t i = 0;
+
+  if (str[i] == '+' || str[i] == '-') {
+    i++;
+    if (i == len) return false;
+  }
+
+  bool has_digit = false;
+
+  for (; i < len; i++) {
+    if (!isdigit((unsigned char)str[i])) {
+      return false;
+    }
+    has_digit = true;
+  }
+
+  return has_digit;
+}
+
+const char *str_end(const char *str) {
+  if (!str) return nullptr;
+  const char *p = str;
+  bool instr = false;
+  while (*p) {
+    if (*p == '\\' && p[1] == '"') {
+      p++;
+    } else {
+      if (*p == '"') {
+        if (!instr) {
+          instr = true;
+          p++;
+        } else {
+          p++;
+          return p;
+        }
+      }
+    }
+    p++;
+  }
+  return nullptr;
+}
+
+const char *str_ignore(const char *str) {
+  if (!str) return nullptr;
+  const char *p = str;
+  while (*p && (*p == ' ' || *p == '\r' || *p == '\n' || *p == '\t')) p++;
+  return p;
+}
+
+const char *br_end(const char *str) {
+  if (!str) return nullptr;
+  size_t level = 0;
+  const char *p = str_ignore(str);
+  while (*p) {
+    if (*p == '[' || *p == '{') {
+      level++;
+    } else if (*p == ']' || *p == '}') {
+      level--;
+      if (level == 0) return p;
+    }
+    p++;
+  }
+  return nullptr;
+}
+
+const char *coma_end(const char *str) {
+  if (!str) return nullptr;
+  const char *p = str;
+  while (*p) {
+    if (*p == ',' || *p == '}' || *p == ']') return p;
+    p++;
+  }
+  return nullptr;
 }

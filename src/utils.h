@@ -697,4 +697,64 @@ extern float *split_float(const char *str, float *ar, size_t ar_size, char d, ch
  */
 extern double *split_double(const char *str, double *ar, size_t ar_size, char d, char delim = ',');
 
+/**
+ * @brief Checks whether a given character sequence represents a valid number.
+ *
+ * This function examines a substring of a given C string and determines whether
+ * it represents a valid number. The number can be an integer or a floating-point
+ * value, and may optionally include a leading '+' or '-' sign and a decimal point.
+ *
+ * No whitespace, exponential notation (e.g., '1e5'), or thousands separators are supported.
+ *
+ * @param str Pointer to the character buffer to examine.
+ * @param len Length of the substring to check.
+ *
+ * @return true if the substring is a valid number, false otherwise.
+ */
+extern bool is_number(const char *str, size_t len);
+
+/**
+ * @brief Finds the end of a quoted JSON string.
+ *
+ * Scans the given string starting from the first double quote (`"`) and returns
+ * a pointer to the character after the closing quote. Handles escaped quotes (e.g., `\"`) correctly.
+ *
+ * @param str Pointer to the string starting at a double quote (`"`).
+ * @return Pointer to the character immediately after the closing quote, or NULL if unterminated.
+ */
+extern const char* str_end(const char* str);
+
+/**
+ * @brief Skips over whitespace characters in a string.
+ *
+ * Advances the pointer past any leading whitespace characters such as space, tab,
+ * carriage return, or newline.
+ *
+ * @param str Pointer to the start of the string to be scanned.
+ * @return Pointer to the first non-whitespace character.
+ */
+extern const char* str_ignore(const char* str);
+
+/**
+ * @brief Finds the matching closing bracket or brace in a JSON structure.
+ *
+ * Traverses the string from the current position to locate the end of an array (`[]`)
+ * or object (`{}`), accounting for nested structures.
+ *
+ * @param str Pointer to the opening bracket (`[` or `{`) in the string.
+ * @return Pointer to the matching closing bracket (`]` or `}`), or NULL if not found.
+ */
+extern const char* br_end(const char* str);
+
+/**
+ * @brief Finds the end of a simple JSON value by locating the next comma, brace, or bracket.
+ *
+ * Useful for parsing primitive values such as numbers, booleans, or null, by identifying
+ * the boundary of the value token.
+ *
+ * @param str Pointer to the beginning of the JSON value.
+ * @return Pointer to the first delimiter character (`,`, `}`, or `]`) or NULL if not found.
+ */
+extern const char* coma_end(const char* str);
+
 #include "utils.tpp"
