@@ -1,5 +1,14 @@
 #include "utils.h"
 
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+#ifdef ARDUINO
+#include <Arduino.h>
+#endif
+
 uint8_t bcd2dec(uint8_t bcd) {
   return (((bcd >> 4) & 0xf) * 10) + (bcd & 0xf);
 }
@@ -8,6 +17,7 @@ uint8_t dec2bcd(uint8_t dec) {
   return (((dec / 10) << 4) & 0xf0) + (dec % 10);
 }
 
+#ifdef ARDUINO
 bool on_min(uint32_t *t, uint32_t delay_min, bool reset) {
   // Validate input
   if (!t) return false;  // Invalid timestamp pointer
@@ -96,9 +106,7 @@ void delay_us(uint32_t start, uint32_t wait_us) {
   uint32_t diff;
   do {
     diff = micros() - start;  // Handles overflow
-#ifdef ARDUINO
     yield();  // Allow background tasks in Arduino environment
-#endif
   } while (diff < wait_us);
 }
 
@@ -112,11 +120,10 @@ void delay_ms(uint32_t start, uint32_t wait_ms) {
   uint32_t diff;
   do {
     diff = millis() - start;  // Handles overflow
-#ifdef ARDUINO
     yield();  // Allow background tasks in Arduino environment
-#endif
   } while (diff < wait_ms);
 }
+#endif
 
 char *bool_to_str(bool num, char *str, uint8_t str_len, const char *t, const char *f) {
   if (!str || str_len == 0) {
@@ -458,7 +465,7 @@ int16_t str_to_i16(const char *str, const char **endptr, uint8_t base) {
 
 uint32_t str_to_u32(const char *str, const char **endptr, uint8_t base) {
   // Use str_to_i32 and validate the result
-  return (uint32_t)str_to_i16(str, endptr, base);
+  return (uint32_t)str_to_i32(str, endptr, base);
 }
 int32_t str_to_i32(const char *str, const char **endptr, uint8_t base) {
   // Validate input
@@ -519,7 +526,7 @@ int32_t str_to_i32(const char *str, const char **endptr, uint8_t base) {
 
 uint64_t str_to_u64(const char *str, const char **endptr, uint8_t base) {
   // Use str_to_i64 and validate the result
-  return (uint64_t)str_to_i16(str, endptr, base);
+  return (uint64_t)str_to_i64(str, endptr, base);
 }
 int64_t str_to_i64(const char *str, const char **endptr, uint8_t base) {
   // Validate input

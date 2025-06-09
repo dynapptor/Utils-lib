@@ -1,7 +1,8 @@
 #pragma once
 
-#include <Arduino.h>
-
+// #include <Arduino.h>
+#include <stddef.h>
+#include <stdint.h>
 /**
  * @def I8_CHR_MAX
  * @brief Maximum number of characters required to represent an int8_t as a string (e.g., "-128").
@@ -102,6 +103,7 @@ union union64 {
   double d;         ///< 64-bit double-precision floating-point value.
 };
 
+#ifdef ARDUINO
 /**
  * @brief Checks if the specified time (in minutes) has elapsed since the last timestamp.
  * @param t Pointer to the timestamp (in milliseconds).
@@ -151,7 +153,7 @@ extern void delay_us(uint32_t start, uint32_t wait_us);
  * @param wait_ms The delay time in milliseconds.
  */
 extern void delay_ms(uint32_t start, uint32_t wait_ms);
-
+#endif
 /**
  * @brief Converts a Binary-Coded Decimal (BCD) number to a decimal number.
  * @param bcd The BCD input number.
@@ -722,7 +724,7 @@ extern bool is_number(const char *str, size_t len);
  * @param str Pointer to the string starting at a double quote (`"`).
  * @return Pointer to the character immediately after the closing quote, or NULL if unterminated.
  */
-extern const char* str_end(const char* str);
+extern const char *str_end(const char *str);
 
 /**
  * @brief Skips over whitespace characters in a string.
@@ -733,7 +735,7 @@ extern const char* str_end(const char* str);
  * @param str Pointer to the start of the string to be scanned.
  * @return Pointer to the first non-whitespace character.
  */
-extern const char* str_ignore(const char* str);
+extern const char *str_ignore(const char *str);
 
 /**
  * @brief Finds the matching closing bracket or brace in a JSON structure.
@@ -744,7 +746,7 @@ extern const char* str_ignore(const char* str);
  * @param str Pointer to the opening bracket (`[` or `{`) in the string.
  * @return Pointer to the matching closing bracket (`]` or `}`), or NULL if not found.
  */
-extern const char* br_end(const char* str);
+extern const char *br_end(const char *str);
 
 /**
  * @brief Finds the end of a simple JSON value by locating the next comma, brace, or bracket.
@@ -755,6 +757,6 @@ extern const char* br_end(const char* str);
  * @param str Pointer to the beginning of the JSON value.
  * @return Pointer to the first delimiter character (`,`, `}`, or `]`) or NULL if not found.
  */
-extern const char* coma_end(const char* str);
+extern const char *coma_end(const char *str);
 
 #include "utils.tpp"
