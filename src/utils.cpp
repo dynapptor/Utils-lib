@@ -106,7 +106,7 @@ void delay_us(uint32_t start, uint32_t wait_us) {
   uint32_t diff;
   do {
     diff = micros() - start;  // Handles overflow
-    yield();  // Allow background tasks in Arduino environment
+    yield();                  // Allow background tasks in Arduino environment
   } while (diff < wait_us);
 }
 
@@ -120,7 +120,7 @@ void delay_ms(uint32_t start, uint32_t wait_ms) {
   uint32_t diff;
   do {
     diff = millis() - start;  // Handles overflow
-    yield();  // Allow background tasks in Arduino environment
+    yield();                  // Allow background tasks in Arduino environment
   } while (diff < wait_ms);
 }
 #endif
@@ -732,6 +732,19 @@ size_t chr_count(const char *str, char c) {
   while (*str != '\0') {
     if (*str++ == c) count++;
   }
+  return count;
+}
+
+size_t chr_count(const char *str, size_t str_len, char c) {
+  // Validate input
+  if (!str) return 0;
+
+  size_t count = 0;
+  // Iterate up to str_len characters or until null terminator
+  for (size_t i = 0; i < str_len && str[i] != '\0'; i++) {
+    if (str[i] == c) count++;
+  }
+
   return count;
 }
 
@@ -1787,7 +1800,7 @@ bool is_number(const char *str, size_t len) {
 }
 
 const char *str_end(const char *str) {
-  if (!str) return nullptr;
+  if (!str) return NULL;
   const char *p = str;
   bool instr = false;
   while (*p) {
@@ -1806,18 +1819,18 @@ const char *str_end(const char *str) {
     }
     p++;
   }
-  return nullptr;
+  return NULL;
 }
 
 const char *str_ignore(const char *str) {
-  if (!str) return nullptr;
+  if (!str) return NULL;
   const char *p = str;
   while (*p && (*p == ' ' || *p == '\r' || *p == '\n' || *p == '\t')) p++;
   return p;
 }
 
 const char *br_end(const char *str) {
-  if (!str) return nullptr;
+  if (!str) return NULL;
   size_t level = 0;
   const char *p = str_ignore(str);
   while (*p) {
@@ -1829,15 +1842,15 @@ const char *br_end(const char *str) {
     }
     p++;
   }
-  return nullptr;
+  return NULL;
 }
 
 const char *coma_end(const char *str) {
-  if (!str) return nullptr;
+  if (!str) return NULL;
   const char *p = str;
   while (*p) {
     if (*p == ',' || *p == '}' || *p == ']') return p;
     p++;
   }
-  return nullptr;
+  return NULL;
 }

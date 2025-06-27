@@ -1,8 +1,8 @@
 #pragma once
 
-// #include <Arduino.h>
 #include <stddef.h>
 #include <stdint.h>
+
 /**
  * @def I8_CHR_MAX
  * @brief Maximum number of characters required to represent an int8_t as a string (e.g., "-128").
@@ -387,6 +387,14 @@ extern char *str_reverse(char *str);
  */
 extern size_t chr_count(const char *str, char c);
 
+/**
+ * @brief Counts occurrences of a character in a string until str_len.
+ * @param str The input string to search.
+ * @param str_len The input until count the existing char.
+ * @param c The character to count.
+ * @return The number of occurrences of the character.
+ */
+extern size_t chr_count(const char *str, size_t str_len, char c);
 /**
  * @brief Counts occurrences of a substring in a string.
  * @param str The input string to search.
