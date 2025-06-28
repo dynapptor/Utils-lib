@@ -52,6 +52,18 @@
 #define U64_CHR_MAX 21
 
 /**
+ * @def FLOAT_CHR_MAX
+ * @brief Maximum number of characters required to represent a float as a string (e.g., "18446744073709551615").
+ */
+#define FLOAT_CHR_MAX 28
+
+/**
+ * @def DOUBLE_CHR_MAX
+ * @brief Maximum number of characters required to represent a double as a string (e.g., "18446744073709551615").
+ */
+#define DOUBLE_CHR_MAX 60
+
+/**
  * @brief Extracts a specified bit field from a value of type T.
  * @tparam T The type of the input value (e.g., uint8_t, uint16_t, etc.).
  * @param v The input value from which to extract bits.
