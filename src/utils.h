@@ -410,7 +410,7 @@ extern size_t str_count(const char *str, const char *find);
  * @param ar_size The size of the output array.
  * @param delim The delimiter character (default: ',').
  */
-extern void str_cut(char *str, char **ar, size_t ar_size, char delim = ',');
+extern void str_cut(char *str, const char **ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Joins an array of characters into a string with a delimiter.
@@ -443,9 +443,10 @@ extern char *join_bool(const bool *ar, size_t ar_size, char *buf, size_t buf_siz
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 8-bit unsigned integers into a string with a delimiter.
@@ -454,9 +455,10 @@ extern char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_siz
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 16-bit signed integers into a string with a delimiter.
@@ -465,9 +467,10 @@ extern char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_si
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 16-bit unsigned integers into a string with a delimiter.
@@ -476,9 +479,10 @@ extern char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_s
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 32-bit signed integers into a string with a delimiter.
@@ -487,9 +491,10 @@ extern char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 32-bit unsigned integers into a string with a delimiter.
@@ -498,9 +503,10 @@ extern char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_s
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 64-bit signed integers into a string with a delimiter.
@@ -509,9 +515,10 @@ extern char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of 64-bit unsigned integers into a string with a delimiter.
@@ -520,9 +527,10 @@ extern char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_s
  * @param buf The output string buffer.
  * @param buf_size The size of the buffer.
  * @param delim The delimiter character (default: ',').
+ * @param base The numerical base (default: 10).
  * @return Pointer to the output string, or NULL on error.
  */
-extern char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',');
+extern char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim = ',', uint8_t base = 10);
 
 /**
  * @brief Joins an array of floats into a string with a delimiter.
@@ -603,7 +611,9 @@ extern char *split_chr(const char *str, char *ar, size_t ar_size, char delim = '
  * @note Tokens exceeding `ar_size` are ignored, and the function stops processing if the `dest` buffer is full.
  * @warning Ensure `dest_size` is large enough to avoid buffer overflow, especially in memory-constrained environments like Arduino.
  */
-extern char *split_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim = ',');
+extern char *split_quoted_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim = ',');
+
+extern const char **split_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Splits a string into an array of 8-bit signed integers based on a delimiter.

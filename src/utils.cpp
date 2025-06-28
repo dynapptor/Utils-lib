@@ -780,7 +780,7 @@ size_t str_count(const char *str, const char *find) {
   return count;
 }
 
-void str_cut(char *str, char **ar, size_t ar_size, char delim) {
+void str_cut(char *str, const char **ar, size_t ar_size, char delim) {
   // Check for NULL pointers or invalid max_ar_size
   if (!str || !ar || ar_size == 0) return;
 
@@ -867,7 +867,7 @@ char *join_bool(const bool *ar, size_t ar_size, char *buf, size_t buf_size, char
   return buf;
 }
 
-char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -876,7 +876,7 @@ char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char
   size_t remaining = buf_size;
   char temp[I8_CHR_MAX];
   for (size_t i = 0; i < ar_size; i++) {
-    i8_to_str(ar[i], temp, I8_CHR_MAX, 10);
+    i8_to_str(ar[i], temp, I8_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -900,7 +900,7 @@ char *join_i8(const int8_t *ar, size_t ar_size, char *buf, size_t buf_size, char
   return ptr;
 }
 
-char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -909,7 +909,7 @@ char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, cha
   size_t remaining = buf_size;
   char temp[U8_CHR_MAX];
   for (size_t i = 0; i < ar_size; i++) {
-    u8_to_str(ar[i], temp, U8_CHR_MAX, 10);
+    u8_to_str(ar[i], temp, U8_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -933,7 +933,7 @@ char *join_u8(const uint8_t *ar, size_t ar_size, char *buf, size_t buf_size, cha
   return buf;
 }
 
-char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -943,7 +943,7 @@ char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, ch
 
   for (size_t i = 0; i < ar_size; i++) {
     char temp[I16_CHR_MAX];
-    i16_to_str(ar[i], temp, I16_CHR_MAX, 10);
+    i16_to_str(ar[i], temp, I16_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -967,7 +967,7 @@ char *join_i16(const int16_t *ar, size_t ar_size, char *buf, size_t buf_size, ch
   return buf;
 }
 
-char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -977,7 +977,7 @@ char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, c
 
   for (size_t i = 0; i < ar_size; i++) {
     char temp[U16_CHR_MAX];
-    u16_to_str(ar[i], temp, U16_CHR_MAX, 10);
+    u16_to_str(ar[i], temp, U16_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -1001,7 +1001,7 @@ char *join_u16(const uint16_t *ar, size_t ar_size, char *buf, size_t buf_size, c
   return buf;
 }
 
-char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -1011,7 +1011,7 @@ char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, ch
 
   for (size_t i = 0; i < ar_size; i++) {
     char temp[I32_CHR_MAX];
-    i32_to_str(ar[i], temp, I32_CHR_MAX, 10);
+    i32_to_str(ar[i], temp, I32_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -1035,7 +1035,7 @@ char *join_i32(const int32_t *ar, size_t ar_size, char *buf, size_t buf_size, ch
   return buf;
 }
 
-char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -1045,7 +1045,7 @@ char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, c
 
   for (size_t i = 0; i < ar_size; i++) {
     char temp[U32_CHR_MAX];
-    u32_to_str(ar[i], temp, U32_CHR_MAX, 10);
+    u32_to_str(ar[i], temp, U32_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -1069,7 +1069,7 @@ char *join_u32(const uint32_t *ar, size_t ar_size, char *buf, size_t buf_size, c
   return buf;
 }
 
-char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -1079,7 +1079,7 @@ char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, ch
 
   for (size_t i = 0; i < ar_size; i++) {
     char temp[I64_CHR_MAX];
-    i64_to_str(ar[i], temp, I64_CHR_MAX, 10);
+    i64_to_str(ar[i], temp, I64_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -1103,7 +1103,7 @@ char *join_i64(const int64_t *ar, size_t ar_size, char *buf, size_t buf_size, ch
   return buf;
 }
 
-char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {
+char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, char delim, uint8_t base) {
   if (!ar || !buf || ar_size == 0 || buf_size == 0) {
     return 0;
   }
@@ -1113,7 +1113,7 @@ char *join_u64(const uint64_t *ar, size_t ar_size, char *buf, size_t buf_size, c
 
   for (size_t i = 0; i < ar_size; i++) {
     char temp[U64_CHR_MAX];
-    u64_to_str(ar[i], temp, U64_CHR_MAX, 10);
+    u64_to_str(ar[i], temp, U64_CHR_MAX, base);
 
     size_t temp_len = strlen(temp);
     bool needs_delimiter = (i < ar_size - 1);
@@ -1278,7 +1278,7 @@ bool *split_bool(const char *str, bool *ar, size_t ar_size, char delim, const ch
   return ar;
 }
 
-char *split_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim) {
+char *split_quoted_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim) {
   // Validate inputs
   if (!str || !ar || !dest || ar_size == 0 || dest_size == 0) {
     return NULL;  // Invalid inputs
@@ -1340,6 +1340,42 @@ char *split_str(const char *str, char *dest, size_t dest_size, const char **ar, 
   }
   if (in_marked && current <= dest_size) *d = '\0';
   return dest;
+}
+
+const char **split_str(const char *str, char *dest, size_t dest_size, const char **ar, size_t ar_size, char delim) {
+  // Validate inputs
+  if (!str || !ar || !dest || ar_size == 0 || dest_size == 0) return NULL;  // Invalid inputs
+
+  size_t str_len = strlen(str);
+  const char *token = str;
+  size_t i = 0;
+  size_t ai = 0;
+  *ar = dest;
+  // Process tokens until end of string or array limit
+  while (*token && ai < ar_size) {
+    // Find next delimiter or end of string
+    *dest = *token;
+    token++;
+    dest++;
+    i++;
+    if (i == str_len) {
+      *dest = '\0';
+      return ar;
+    }
+
+    if (*token == delim) {
+      *dest = '\0';
+      token++;
+      dest++;
+      i++;
+      ai++;
+      ar[ai] = dest;
+    } else if (*token == '\0') {
+      *dest = '\0';
+      return ar;
+    }
+  }
+  return ar;
 }
 
 char *split_chr(const char *str, char *ar, size_t ar_size, char delim) {
