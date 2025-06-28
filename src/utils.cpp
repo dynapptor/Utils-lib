@@ -780,9 +780,9 @@ size_t str_count(const char *str, const char *find) {
   return count;
 }
 
-void str_cut(char *str, const char **ar, size_t ar_size, char delim) {
+const char ** str_cut(char *str, const char **ar, size_t ar_size, char delim) {
   // Check for NULL pointers or invalid max_ar_size
-  if (!str || !ar || ar_size == 0) return;
+  if (!str || !ar || ar_size == 0) return NULL;
 
   size_t it = 0;           // Index for the array of substring pointers
   size_t l = strlen(str);  // Length of the input string
@@ -802,6 +802,7 @@ void str_cut(char *str, const char **ar, size_t ar_size, char delim) {
       }
     }
   }
+  return ar;
 }
 
 char *join_chr_arr(const char *ar, size_t ar_size, char *buf, size_t buf_size, char delim) {

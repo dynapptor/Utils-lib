@@ -422,7 +422,7 @@ extern size_t str_count(const char *str, const char *find);
  * @param ar_size The size of the output array.
  * @param delim The delimiter character (default: ',').
  */
-extern void str_cut(char *str, const char **ar, size_t ar_size, char delim = ',');
+extern const char **str_cut(char *str, const char **ar, size_t ar_size, char delim = ',');
 
 /**
  * @brief Joins an array of characters into a string with a delimiter.
