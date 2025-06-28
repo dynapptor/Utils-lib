@@ -294,20 +294,28 @@ char *float_to_str(float num, char *str, uint8_t str_len, int8_t min_width, uint
 }
 
 char *double_to_str(double num, char *str, uint8_t str_len, int8_t min_width, uint8_t dec) {
-  // Validate input
-  if (!str || str_len < 2 || min_width > 20 || min_width < -20 || dec > 10) {
-    return NULL;  // Invalid buffer, size, or format parameters
+  if (!str || str_len == 0) return NULL;
+
+#ifdef __AVR__
+  if (min_width > 15 || min_width < -15 || dec > MAX_DECIMAL) return NULL;
+#else
+  if (min_width > 32 || min_width < -32 || dec > MAX_DECIMAL) return NULL;
+#endif
+
+#ifdef __AVR__
+  // AVR: double == float, using dtostrf
+  dtostrf(num, min_width, dec, str);
+  if (strlen(str) >= str_len) {
+    return NULL;
   }
-
-  // Create format string (e.g., "%5.2f")
-  char fmt[12];  // Enough for "%-20.10f\0"
-  snprintf(fmt, sizeof(fmt), "%%%d.%df", min_width, dec);
-
-  // Format the number, ensuring buffer safety
-  if (snprintf(str, str_len, fmt, (float)num) >= str_len) {
-    return NULL;  // Buffer too small
+#else
+  // ESP32: snprintf használata 64-bites double-hoz
+  char fmt[12];
+  snprintf(fmt, sizeof(fmt), "%%%d.%dlf", min_width, dec);
+  if (snprintf(ret.data(), ret.size(), fmt, num) >= ret.size()) {
+    return NULL;
   }
-
+#endif
   return str;
 }
 
@@ -780,7 +788,7 @@ size_t str_count(const char *str, const char *find) {
   return count;
 }
 
-const char ** str_cut(char *str, const char **ar, size_t ar_size, char delim) {
+const char **str_cut(char *str, const char **ar, size_t ar_size, char delim) {
   // Check for NULL pointers or invalid max_ar_size
   if (!str || !ar || ar_size == 0) return NULL;
 

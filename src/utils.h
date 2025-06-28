@@ -55,13 +55,23 @@
  * @def FLOAT_CHR_MAX
  * @brief Maximum number of characters required to represent a float as a string (e.g., "18446744073709551615").
  */
+#ifdef __AVR__
+#define FLOAT_CHR_MAX 16
+#define MAX_DECIMAL 6
+#else
 #define FLOAT_CHR_MAX 28
-
+#define MAX_DECIMAL 15
+#endif
 /**
  * @def DOUBLE_CHR_MAX
  * @brief Maximum number of characters required to represent a double as a string (e.g., "18446744073709551615").
  */
-#define DOUBLE_CHR_MAX 60
+#ifdef __AVR__
+#define DOUBLE_CHR_MAX 16
+#else
+#define DOUBLE_CHR_MAX 28
+#define MAX_DECIMAL 15
+#endif
 
 /**
  * @brief Extracts a specified bit field from a value of type T.
